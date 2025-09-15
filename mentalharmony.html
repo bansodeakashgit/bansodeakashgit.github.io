@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mental Harmony</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    html, body {
+      height: 100%;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+      color: #333;
+    }
+    
+    body {
+      background: linear-gradient(-45deg, #a8edea, #fed6e3, #c3f5ff, #ffd3b6);
+      background-size: 400% 400%;
+      animation: gradient 15s ease infinite;
+      padding: 20px;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    
+    @keyframes gradient {
+      0% {background-position: 0% 50%;}
+      50% {background-position: 100% 50%;}
+      100% {background-position: 0% 50%;}
+    }
+    
+    .container {
+      background: rgba(255, 255, 255, 0.85);
+      border-radius: 25px;
+      padding: 30px;
+      width: 100%;
+      max-width: 1000px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 30px;
+      backdrop-filter: blur(10px);
+      margin: 20px 0;
+    }
+    
+    h1 {
+      grid-column: span 2; 
+      text-align: center; 
+      margin-top: 0;
+      color: #2a6f6b;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+    
+    .section {
+      display: flex; 
+      flex-direction: column; 
+      gap: 10px;
+    }
+    
+    h3 {
+      color: #2a6f6b;
+      margin-bottom: 5px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .btn {
+      padding: 12px;
+      background: #6fc3c0;
+      color: white;
+      border: none; 
+      border-radius: 15px;
+      cursor: pointer; 
+      font-size: 1em;
+      transition: all 0.3s;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .btn:hover {
+      background: #58aaa6; 
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+    
+    .btn.active {
+      background: #2a6f6b;
+      box-shadow: 0 0 0 3px rgba(111, 195, 192, 0.5);
+    }
+    
+    .volume {
+      width: 100%;
+      accent-color: #6fc3c0;
+      margin-top: 5px;
+    }
+    
+    .note {
+      grid-column: span 2; 
+      text-align: center; 
+      font-size: 0.9em; 
+      color: #555; 
+      margin-top: 10px;
+      padding: 10px;
+      background: rgba(111, 195, 192, 0.1);
+      border-radius: 10px;
+    }
+    
+    .now-playing {
+      grid-column: span 2;
+      background: rgba(42, 111, 107, 0.1);
+      border-radius: 15px;
+      padding: 15px;
+      margin-top: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    
+    .now-playing h3 {
+      margin: 0;
+    }
+    
+    .playing-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px;
+      background: rgba(255, 255, 255, 0.5);
+      border-radius: 10px;
+    }
+    
+    .playing-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .mixer {
+      grid-column: span 2;
+      background: rgba(42, 111, 107, 0.1);
+      border-radius: 15px;
+      padding: 15px;
+      margin-top: 10px;
+    }
+    
+    .mix-controls {
+      display: flex;
+      gap: 15px;
+      margin-top: 10px;
+    }
+    
+    .mix-control {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+    
+    .mix-label {
+      font-size: 0.9em;
+      display: flex;
+      justify-content: space-between;
+    }
+    
+    .stop-all {
+      grid-column: span 2;
+      background: #ff6b6b;
+      color: white;
+      padding: 12px;
+      border: none;
+      border-radius: 15px;
+      cursor: pointer;
+      font-size: 1em;
+      transition: all 0.3s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    
+    .stop-all:hover {
+      background: #ff5252;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(255, 107, 107, 0.3);
+    }
+    
+    .loading {
+      display: inline-block;
+      width: 16px;
+      height: 16px;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      border-radius: 50%;
+      border-top-color: white;
+      animation: spin 1s ease-in-out infinite;
+    }
+    
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    
+    @media (max-width: 768px) {
+      .container {
+        grid-template-columns: 1fr;
+        gap: 20px;
+      }
+      
+      h1, .note, .now-playing, .mixer, .stop-all {
+        grid-column: 1;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🧘 Mental Harmony</h1>
+
+    <div class="section">
+      <h3>🌊 Brainwave Beats</h3>
+      <button class="btn" data-beat="2" data-name="Delta (Deep Sleep)">Δ Delta (Deep Sleep)</button>
+      <button class="btn" data-beat="6" data-name="Theta (Meditation)">θ Theta (Meditation)</button>
+      <button class="btn" data-beat="10" data-name="Alpha (Relaxed Focus)">α Alpha (Relaxed Focus)</button>
+      <button class="btn" data-beat="20" data-name="Beta (Concentration)">β Beta (Concentration)</button>
+      <button class="btn" data-beat="40" data-name="Gamma (High Focus)">γ Gamma (High Focus)</button>
+      <button class="btn" data-beat="7.83" data-name="Schumann Resonance">♁ Schumann Resonance</button>
+
+      <label>Beats Volume</label>
+      <input id="beatsVolume" class="volume" type="range" min="0" max="1" step="0.01" value="0.5">
+    </div>
+
+    <div class="section">
+      <h3>🌿 Ambient Sounds</h3>
+      <button class="btn" data-sound="rain" data-name="Rain">🌧️ Rain</button>
+      <button class="btn" data-sound="forest" data-name="Forest">🌲 Forest</button>
+      <button class="btn" data-sound="thunder" data-name="Thunderstorm">⛈️ Thunderstorm</button>
+      <button class="btn" data-sound="fireplace" data-name="Fireplace">🔥 Fireplace</button>
+      <button class="btn" data-sound="waves" data-name="Ocean Waves">🌊 Ocean Waves</button>
+      <button class="btn" data-sound="wind" data-name="Wind">💨 Wind</button>
+
+      <label>Ambient Volume</label>
+      <input id="ambientVolume" class="volume" type="range" min="0" max="1" step="0.01" value="0.5">
+    </div>
+
+    <div class="mixer">
+      <h3>🔊 Sound Mixer</h3>
+      <p>Adjust the mix between brainwave beats and ambient sounds</p>
+      <div class="mix-controls">
+        <div class="mix-control">
+          <div class="mix-label">
+            <span>Brainwaves</span>
+            <span id="beatsMixValue">50%</span>
+          </div>
+          <input id="beatsMix" class="volume" type="range" min="0" max="100" value="50">
+        </div>
+        <div class="mix-control">
+          <div class="mix-label">
+            <span>Ambience</span>
+            <span id="ambientMixValue">50%</span>
+          </div>
+          <input id="ambientMix" class="volume" type="range" min="0" max="100" value="50">
+        </div>
+      </div>
+    </div>
+
+    <div class="now-playing">
+      <h3>🎵 Now Playing</h3>
+      <div id="currentBeats" class="playing-item">
+        <div class="playing-title">⏸️ Brainwaves</div>
+        <div>None</div>
+      </div>
+      <div id="currentAmbient" class="playing-item">
+        <div class="playing-title">⏸️ Ambient Sound</div>
+        <div>None</div>
+      </div>
+    </div>
+
+    <button class="stop-all" id="stopAll">⏹️ Stop All Sounds</button>
+
+    <div class="note">🎧 Use headphones for best experience with binaural beats</div>
+  </div>
+
+  <script>
+    // Audio context and nodes
+    let audioCtx, leftOsc, rightOsc, leftGain, rightGain, merger;
+    let playingBeats = false;
+    let currentBeatName = "";
+    
+    // Ambient sounds
+    let ambientAudio;
+    let playingAmbient = false;
+    let currentAmbientName = "";
+    
+    // Audio buffers for ambient sounds
+    const ambientBuffers = {};
+    let audioBuffersLoaded = false;
+
+    // Fixed audio URLs that work with the Web Audio API
+    const ambientFiles = {
+      rain: "https://raw.githubusercontent.com/bansodeakashgit/Sounds/main/rain-drops.wav",
+      forest: "https://raw.githubusercontent.com/bansodeakashgit/Sounds/main/crickets-and-insects-in-the-wild-ambience.wav",
+      thunder: "https://raw.githubusercontent.com/bansodeakashgit/Sounds/main/rain-and-thunder-storm.wav",
+      fireplace: "https://raw.githubusercontent.com/bansodeakashgit/Sounds/main/camp-fire.mp3",
+      waves: "https://raw.githubusercontent.com/bansodeakashgit/Sounds/main/rough-sea-waves-loop.wav",
+      wind: "https://raw.githubusercontent.com/bansodeakashgit/Sounds/main/wind-blowing-ambience.wav"
+    };
+
+    // Initialize audio context on first user interaction
+    function initAudio() {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        preloadAmbientSounds();
+      }
+    }
+
+    // Preload ambient sounds as audio buffers
+    async function preloadAmbientSounds() {
+      try {
+        for (const [key, url] of Object.entries(ambientFiles)) {
+          const response = await fetch(url);
+          const arrayBuffer = await response.arrayBuffer();
+          ambientBuffers[key] = await audioCtx.decodeAudioData(arrayBuffer);
+        }
+        audioBuffersLoaded = true;
+        console.log("All audio buffers loaded successfully");
+      } catch (error) {
+        console.error("Error loading audio buffers:", error);
+      }
+    }
+
+    // Play ambient sound
+    function playAmbient(type, name) {
+      if (!audioCtx) initAudio();
+      
+      stopAmbient();
+      
+      if (audioBuffersLoaded && ambientBuffers[type]) {
+        // Create a new audio buffer source
+        const source = audioCtx.createBufferSource();
+        source.buffer = ambientBuffers[type];
+        source.loop = true;
+        
+        // Create a gain node for volume control
+        const gainNode = audioCtx.createGain();
+        gainNode.gain.value = document.getElementById('ambientVolume').value * (document.getElementById('ambientMix').value / 100);
+        
+        // Connect and play
+        source.connect(gainNode);
+        gainNode.connect(audioCtx.destination);
+        source.start();
+        
+        ambientAudio = {
+          source: source,
+          gainNode: gainNode
+        };
+        
+        playingAmbient = true;
+        currentAmbientName = name;
+        updateNowPlaying();
+        
+        // Update button state
+        document.querySelectorAll('[data-sound]').forEach(btn => {
+          if (btn.dataset.sound === type) {
+            btn.classList.add('active');
+          } else {
+            btn.classList.remove('active');
+          }
+        });
+      } else {
+        console.error("Audio buffers not loaded yet");
+        // Show error or retry loading
+      }
+    }
+
+    // Stop ambient sound
+    function stopAmbient() {
+      if (ambientAudio) {
+        if (ambientAudio.source && ambientAudio.source.stop) {
+          ambientAudio.source.stop();
+        }
+        ambientAudio = null;
+      }
+      playingAmbient = false;
+      currentAmbientName = "";
+      updateNowPlaying();
+      
+      // Update button states
+      document.querySelectorAll('[data-sound]').forEach(btn => {
+        btn.classList.remove('active');
+      });
+    }
+
+    // Start binaural beats
+    function startBeats(beatFreq, name) {
+      if (!audioCtx) initAudio();
+      
+      stopBeats();
+      
+      leftOsc = audioCtx.createOscillator();
+      rightOsc = audioCtx.createOscillator();
+      leftGain = audioCtx.createGain();
+      rightGain = audioCtx.createGain();
+      merger = audioCtx.createChannelMerger(2);
+
+      leftOsc.type = 'sine';
+      rightOsc.type = 'sine';
+      leftOsc.frequency.value = 200 - beatFreq/2;
+      rightOsc.frequency.value = 200 + beatFreq/2;
+
+      const beatsVolume = document.getElementById('beatsVolume');
+      const beatsMix = document.getElementById('beatsMix');
+      
+      leftGain.gain.value = beatsVolume.value * (beatsMix.value / 100);
+      rightGain.gain.value = beatsVolume.value * (beatsMix.value / 100);
+
+      leftOsc.connect(leftGain).connect(merger, 0, 0);
+      rightOsc.connect(rightGain).connect(merger, 0, 1);
+      merger.connect(audioCtx.destination);
+
+      leftOsc.start();
+      rightOsc.start();
+      playingBeats = true;
+      currentBeatName = name;
+      updateNowPlaying();
+      
+      // Update button state
+      document.querySelectorAll('[data-beat]').forEach(btn => {
+        if (parseFloat(btn.dataset.beat) === beatFreq) {
+          btn.classList.add('active');
+        } else {
+          btn.classList.remove('active');
+        }
+      });
+    }
+
+    // Stop binaural beats
+    function stopBeats() {
+      if (playingBeats) {
+        leftOsc.stop();
+        rightOsc.stop();
+        playingBeats = false;
+        currentBeatName = "";
+        updateNowPlaying();
+        
+        // Update button states
+        document.querySelectorAll('[data-beat]').forEach(btn => {
+          btn.classList.remove('active');
+        });
+      }
+    }
+
+    // Stop all sounds
+    function stopAllSounds() {
+      stopBeats();
+      stopAmbient();
+    }
+
+    // Update the now playing display
+    function updateNowPlaying() {
+      document.getElementById('currentBeats').innerHTML = `
+        <div class="playing-title">${playingBeats ? '▶️' : '⏸️'} Brainwaves</div>
+        <div>${currentBeatName || 'None'}</div>
+      `;
+      
+      document.getElementById('currentAmbient').innerHTML = `
+        <div class="playing-title">${playingAmbient ? '▶️' : '⏸️'} Ambient Sound</div>
+        <div>${currentAmbientName || 'None'}</div>
+      `;
+    }
+
+    // Event listeners
+    document.addEventListener('click', initAudio);
+
+    document.querySelectorAll('[data-beat]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const beatFreq = parseFloat(btn.dataset.beat);
+        const beatName = btn.dataset.name;
+        startBeats(beatFreq, beatName);
+      });
+    });
+
+    document.querySelectorAll('[data-sound]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const soundType = btn.dataset.sound;
+        const soundName = btn.dataset.name;
+        
+        if (playingAmbient && currentAmbientName === soundName) {
+          stopAmbient();
+        } else {
+          playAmbient(soundType, soundName);
+        }
+      });
+    });
+
+    document.getElementById('stopAll').addEventListener('click', stopAllSounds);
+
+    // Volume control event listeners
+    const beatsVolume = document.getElementById('beatsVolume');
+    beatsVolume.addEventListener('input', e => {
+      if (leftGain && rightGain) {
+        const beatsMix = document.getElementById('beatsMix');
+        leftGain.gain.value = e.target.value * (beatsMix.value / 100);
+        rightGain.gain.value = e.target.value * (beatsMix.value / 100);
+      }
+    });
+
+    const ambientVolume = document.getElementById('ambientVolume');
+    ambientVolume.addEventListener('input', e => {
+      if (ambientAudio && ambientAudio.gainNode) {
+        const ambientMix = document.getElementById('ambientMix');
+        ambientAudio.gainNode.gain.value = e.target.value * (ambientMix.value / 100);
+      }
+    });
+
+    // Mix control event listeners
+    const beatsMix = document.getElementById('beatsMix');
+    const ambientMix = document.getElementById('ambientMix');
+    const beatsMixValue = document.getElementById('beatsMixValue');
+    const ambientMixValue = document.getElementById('ambientMixValue');
+
+    beatsMix.addEventListener('input', e => {
+      beatsMixValue.textContent = `${e.target.value}%`;
+      if (leftGain && rightGain) {
+        const beatsVolume = document.getElementById('beatsVolume');
+        leftGain.gain.value = beatsVolume.value * (e.target.value / 100);
+        rightGain.gain.value = beatsVolume.value * (e.target.value / 100);
+      }
+    });
+
+    ambientMix.addEventListener('input', e => {
+      ambientMixValue.textContent = `${e.target.value}%`;
+      if (ambientAudio && ambientAudio.gainNode) {
+        const ambientVolume = document.getElementById('ambientVolume');
+        ambientAudio.gainNode.gain.value = ambientVolume.value * (e.target.value / 100);
+      }
+    });
+
+    // Initialize mix values display
+    beatsMixValue.textContent = `${beatsMix.value}%`;
+    ambientMixValue.textContent = `${ambientMix.value}%`;
+  </script>
+</body>
+</html>
